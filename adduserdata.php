@@ -122,6 +122,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		}
 		//Relaying the response to the client
+		$conn = null;
 		echo (json_encode($response));
 }
 else {
