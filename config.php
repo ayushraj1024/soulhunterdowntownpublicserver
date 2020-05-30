@@ -13,13 +13,7 @@ $DATABASEPASSWORD = "xxxx";
 $DATABASENAME = "xxxx";
 
 
-//Email server credentials below
-
-$EMAILSERVERHOSTNAME = "xxxx.xxxx.xxxx";
-
-$EMAILSERVERUSERNAME = "xxxx";
-
-$EMAILSERVERPASSWORD = "xxxx";
+//We are no longer using mail servers
 
 
 ?>

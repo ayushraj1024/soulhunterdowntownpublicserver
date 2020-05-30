@@ -15,8 +15,5 @@ try {
 				$response->message = "Connection failed: " . $e->getMessage();
 }
 
-//Checking for duplicate username
-$stmt = $conn->prepare('DELETE FROM users WHERE recordcreationtime < (NOW()- INTERVAL 5 minute) AND valid = 0;');
-$stmt->execute();
-
+$conn = null;
 ?>
