@@ -22,6 +22,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$code = filter_var($code,FILTER_SANITIZE_STRING);
 	$password = filter_var($password,FILTER_SANITIZE_STRING);
 	
+	//Remove whitespaces from the received values (tabs/spaces/newlines)
 	$password = preg_replace("/\s+/", "", $password);
 	$username = preg_replace("/\s+/", "", $username);
 	$code = preg_replace("/\s+/", "", $code);

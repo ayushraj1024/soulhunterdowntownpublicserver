@@ -23,6 +23,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$username = filter_var($username,FILTER_SANITIZE_STRING);
 		$profilepicture = filter_var($profilepicture,FILTER_SANITIZE_STRING);
 		
+		//Remove whitespaces from the received values (tabs/spaces/newlines)
 		$password = preg_replace("/\s+/", "", $password);
 		$username = preg_replace("/\s+/", "", $username);
 		$profilepicture = preg_replace("/\s+/", "", $profilepicture);
