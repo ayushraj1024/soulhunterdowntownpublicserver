@@ -6,12 +6,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $response = NULL; //This variable holds the JSON data which we will send to the client
+
 $nullValueFound = False; //This variable will keep track of the fact whether we found any null value or not
 $verifiedUser = False; //This varialbe will keep track of the fact that we are dealing with the correct user
 
-$userScore = 0; //This variable will hold the score of the user requesting the list
-$topcounter = 0; //This variable will keep track of how many higher score records we have put into the response variable
-$bottomcounter = 0; //This variable will keep track of how many lower score records we have put into the response variable
+$userId = NULL; //This variable will hold the user id of the user
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -75,81 +74,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$stmt->bindParam(':password',$password);
 		
 		if($stmt->execute()) {
-			$response->success = "True";
-			$response->message = "Points retrieved";
-			$row = $stmt->fetch();
-			$userScore = $row["points"];
-			
-			//Fetching two users above the current user's points
-			$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users WHERE points >= :userScore AND username != :username ORDER BY points ASC');
-			$stmt->bindParam(':userScore',$userScore);
-			$stmt->bindParam(':username',$username);
-			
-			if($stmt->execute()) {
-				if($stmt->rowCount() > 0) {
-					$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					
-					$response->topusername = $row[0]["username"];
-					$response->toppoints = $row[0]["points"];
-					$response->topprofilepicture = $row[0]["profilepicture"];
-					$topcounter++;
-					$response->topcounter = $topcounter;
-					
-					if($row[1] != NULL) {
-					$response->secondtopusername = $row[1]["username"];
-					$response->secondtoppoints = $row[1]["points"];
-					$response->secondtopprofilepicture = $row[1]["profilepicture"];
-					$topcounter++;
-					$response->topcounter = $topcounter;
-					}
-					
+			if($stmt->rowCount() == 1) {
+				$response->success = "True";
+				$response->message = "User verified";
+				
+				$row = $stmt->fetch();
+				
+				$userId = $row["userid"];
+				
+				$stmt = $conn->prepare('DELETE FROM users WHERE userid = :userid');
+				$stmt->bindParam(':userid',$userId);
+				
+				if($stmt->execute()) {
+					$response->success = "True";
+					$response->message = "Account Deleted";
+				} else {
+					$response->success = "False";
+					$response->message = "Error Occurred. Please try again.";
 				}
 			} else {
 				$response->success = "False";
-				$response->message = "Error occured. Please try again.";
+				$response->message = "Error Occurred. Please try again.";
 			}
-			
-			
-			//Fetching two users below the current user's points
-			$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users WHERE points < :userScore ORDER BY points DESC');
-			$stmt->bindParam(':userScore',$userScore);
-			
-			if($stmt->execute()) {
-				if($stmt->rowCount() > 0) {
-					$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					
-					$response->bottomusername = $row[0]["username"];
-					$response->bottompoints = $row[0]["points"];
-					$response->bottomprofilepicture = $row[0]["profilepicture"];
-					$bottomcounter++;
-					$response->bottomcounter = $bottomcounter;
-					
-					if($row[1] != NULL) {
-					$response->bottomtopusername = $row[1]["username"];
-					$response->bottomtoppoints = $row[1]["points"];
-					$response->bottomtopprofilepicture = $row[1]["profilepicture"];
-					$bottomcounter++;
-					$response->bottomcounter = $bottomcounter;
-					}
-					
-				}
-			} else {
-				$response->success = "False";
-				$response->message = "Error occured. Please try again.";
-			}
-			
-		
 		} else {
-			$response->success = "True";
-			$response->message = "Error occured. Please try again.";
+			$response->success = "False";
+			$response->message = "Error Occurred. Please try again.";
 		}
-			
-		}
-		
+	
+	}
+	
 	$conn = null;
 	echo (json_encode($response));
-		
-	}	
+	
+	}
 
 }
 else {
@@ -157,5 +114,6 @@ else {
 	$response->message = "Invalid request";
 	echo (json_encode($response));
 }
+
 
 ?>

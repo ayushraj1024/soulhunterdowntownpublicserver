@@ -5,6 +5,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$response = NULL; //This variable holds the JSON data which we will send to the client
 $nullValueFound = False; //This variable will keep track of the fact whether we found any null value or not
 $verifiedUser = False; //This varialbe will keep track of the fact that we are dealing with the correct user
 

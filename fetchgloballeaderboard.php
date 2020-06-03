@@ -6,11 +6,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $response = NULL; //This variable holds the JSON data which we will send to the client
+$responseArray = []; //This variable holds an array of JSON objects (JSON Array)
+
+$recordCounter = 0; //This is a counter which will help us count how many records we have put in our JSON Array
+
 $nullValueFound = False; //This variable will keep track of the fact whether we found any null value or not
 $verifiedUser = False; //This varialbe will keep track of the fact that we are dealing with the correct user
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+	
 	$username = $_POST["username"];
 	$password = $_POST["password"];
 	
@@ -66,44 +70,28 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	
 	if($verifiedUser) {
-		$stmt = $conn->prepare('SELECT * FROM users WHERE username = :username AND password = :password');
-		$stmt->bindParam(':username',$username);
-		$stmt->bindParam(':password',$password);
+		$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users WHERE ORDER BY points DESC LIMIT 5');
+		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
-		if($stmt->execute()) {
-				$response->success = "True";
-				$response->message = "Game values fetched";
-				$row = $stmt->fetch();
-				$response->points = $row["points"];
-				$response->coins = $row["coins"];
-				$response->attackpower = $row["attackpower"];
-				$response->bulletfiringcooldown = $row["bulletfiringcooldown"];
-				$response->stage1unlocked = $row["stage1unlocked"];
-				$response->stage2unlocked = $row["stage2unlocked"];
-				$response->maxhealth = $row["maxhealth"];
-				$response->healthupgradecost = $row["healthupgradecost"];
-				$response->damageupgradecost = $row["damageupgradecost"];
-				$response->attackspeedupgradecost = $row["attackspeedupgradecost"];
-				$response->healthupgradeindicatoranimationnumber = $row["healthupgradeindicatoranimationnumber"];
-				$response->damageupgradeindicatoranimationnumber = $row["damageupgradeindicatoranimationnumber"];
-				$response->attackspeedupgradeindicatoranimationnumber = $row["attackspeedupgradeindicatoranimationnumber"];
-				}
-			else {
-				$response->success = "False";
-				$response->message = "Error occured. Please try again.";
-			}
+		while($recordCounter < 5) {
+			$response->username = $row[$recordCounter]["username"];
+			$response->profilepicture = $row[$recordCounter]["profilepicture"];
+			$response->points = $row[$recordCounter]["points"];
+			
+	        $recordCounter++;
+			
+			array_push($responseArray,$response);
+		}
 	}
-	
 	$conn = null;
-	echo (json_encode($response));
-	
+	echo (json_encode($responseArray));
 	}
+	
 }
 else {
 	$response->success = "False";
 	$response->message = "Invalid request";
 	echo (json_encode($response));
 }
-
 
 ?>
