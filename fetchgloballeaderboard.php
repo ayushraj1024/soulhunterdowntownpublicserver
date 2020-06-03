@@ -70,7 +70,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	
 	if($verifiedUser) {
-		$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users WHERE ORDER BY points DESC LIMIT 5');
+		$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users ORDER BY points DESC LIMIT 5');
 		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
 		while($recordCounter < 5) {
