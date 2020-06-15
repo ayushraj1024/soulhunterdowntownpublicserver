@@ -1,9 +1,9 @@
 <?php
 require_once('config.php');
 
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 
 $response = NULL; //This variable holds the JSON data which we will send to the client
 $proceedWithTransaction = False; /*This variable will store the boolean value which will tell us whether we can proceed

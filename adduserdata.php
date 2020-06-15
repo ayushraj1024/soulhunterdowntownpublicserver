@@ -1,9 +1,9 @@
 <?php
 require_once('config.php');
 
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 
 $response = NULL; //This variable holds the JSON data which we will send to the client
 $noDuplicatesFound = True; //This variable tells whether we found a duplicate email address or a username
@@ -84,7 +84,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 			if($noDuplicatesFound) { //Checking if duplicate usernames or emails found or not
 			
 				//Preparing and executing the MySQL query on the database
-				$stmt = $conn->prepare('INSERT INTO users (password,username,profilepicture,validation) VALUES (:password,:username,:profilepicture,:validation)');
+				$stmt = $conn->prepare('INSERT INTO users (password,username,profilepicture,validation,points,coins) VALUES (:password,:username,:profilepicture,:validation,0,0)');
 				$stmt->bindParam(':password', $password);
 				$stmt->bindParam(':username', $username);
 				$stmt->bindParam(':profilepicture', $profilepicture);

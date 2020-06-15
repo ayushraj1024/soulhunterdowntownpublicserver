@@ -1,9 +1,9 @@
 <?php
 require_once('config.php');
 
-ini_set('display_errors', 1);
+/*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL);*/
 
 $response = NULL; //This variable holds the JSON data which we will send to the client
 $nullValueFound = False; //This variable will keep track of the fact whether we found any null value or not
@@ -57,8 +57,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 		if($stmt->execute()) {
 			if($stmt->rowCount() == 1) {
+				$row = $stmt->fetch();
 				$response->success = "True";
 				$response->message = "User verified";
+				$response->profilepicture = $row["profilepicture"];
+			}
+			else {
+				$response->success = "False";
+				$response->message = "Error occured. Please try again.";
 			}
 		} else {
 				$response->success = "False";
