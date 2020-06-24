@@ -76,20 +76,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 	if($verifiedUser) {
 		$stmt = $conn->prepare('SELECT username,profilepicture,points FROM users ORDER BY points DESC LIMIT 5');
+		$stmt->execute();
 		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
-		while($recordCounter < 5) {
+		$response->username0 = $row[0]["username"];
+		$response->profilepicture0 = $row[0]["profilepicture"];
+		$response->points0 = $row[0]["points"];
+		
+		$response->username1 = $row[1]["username"];
+		$response->profilepicture1 = $row[1]["profilepicture"];
+		$response->points1 = $row[1]["points"];
+		
+		$response->username2 = $row[2]["username"];
+		$response->profilepicture2 = $row[2]["profilepicture"];
+		$response->points2 = $row[2]["points"];
+		
+		$response->username3 = $row[3]["username"];
+		$response->profilepicture3 = $row[3]["profilepicture"];
+		$response->points3 = $row[3]["points"];
+		
+		$response->username4 = $row[4]["username"];
+		$response->profilepicture4 = $row[4]["profilepicture"];
+		$response->points4 = $row[4]["points"];
+		
+		/*while($recordCounter < 5) {
 			$response->username = $row[$recordCounter]["username"];
 			$response->profilepicture = $row[$recordCounter]["profilepicture"];
 			$response->points = $row[$recordCounter]["points"];
-			
-	        $recordCounter++;
-			
-			array_push($responseArray,$response);
-		}
+			$recordCounter++;
+			array_push($responseArray,$response);	
+		}*/
 	}
 	$conn = null;
-	echo (json_encode($responseArray));
+	echo (json_encode($response));
 	}
 	
 }
